@@ -1,0 +1,6 @@
+{
+  "name": "SchoolERP Pro",
+  "description": "The integrated administrative system for educational institutions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
