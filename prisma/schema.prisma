@@ -101,6 +101,8 @@ model AcademicYear {
   timetableSlots TimetableSlot[]
 
   @@index([isCurrent])
+  @@index([isCurrent, startDate])
+  @@index([startDate, endDate])
 }
 
 model Term {
@@ -129,6 +131,8 @@ model Stage {
   updatedAt DateTime @updatedAt
 
   grades Grade[]
+
+  @@index([order])
 }
 
 model Grade {
@@ -146,6 +150,7 @@ model Grade {
   examPeriods   ExamPeriod[]
 
   @@index([stageId])
+  @@index([stageId, order])
 }
 
 model Section {
@@ -162,6 +167,7 @@ model Section {
   studentAttendances StudentAttendance[]
 
   @@index([gradeId])
+  @@index([gradeId, name])
 }
 
 model Department {
@@ -237,6 +243,8 @@ model Student {
   @@index([nationalId])
   @@index([status])
   @@index([deletedAt])
+  @@index([status, deletedAt])
+  @@index([enrollmentDate])
 }
 
 model Guardian {
@@ -289,6 +297,8 @@ model Enrollment {
   @@index([academicYearId])
   @@index([sectionId])
   @@index([status])
+  @@index([academicYearId, sectionId, status])
+  @@index([studentId, status])
 }
 
 model AdmissionApplication {
@@ -499,6 +509,7 @@ model Employee {
 
   @@index([employeeNumber])
   @@index([departmentId])
+  @@index([gradeId, name])
   @@index([status])
   @@index([deletedAt])
 }
@@ -514,6 +525,7 @@ model TeacherSubject {
   @@unique([employeeId, subjectId])
   @@index([employeeId])
   @@index([subjectId])
+  @@index([subjectId, employeeId])
 }
 
 model Contract {
@@ -694,6 +706,10 @@ model Invoice {
   @@index([status])
   @@index([invoiceNumber])
   @@index([dueDate])
+  @@index([studentId, status])
+  @@index([studentId, createdAt])
+  @@index([status, dueDate])
+  @@index([status, createdAt])
 }
 
 model InvoiceItem {
@@ -729,6 +745,10 @@ model Payment {
   @@index([paymentNumber])
   @@index([status])
   @@index([paidAt])
+  @@index([invoiceId, paidAt])
+  @@index([status, paidAt])
+  @@index([method, paidAt])
+  @@index([receivedBy, paidAt])
 }
 
 model Discount {
@@ -763,8 +783,12 @@ model Expense {
   updatedAt   DateTime @updatedAt
 
   @@index([category])
+  @@index([academicYearId, gradeId, category])
+  @@index([isRequired, category])
   @@index([status])
   @@index([date])
+  @@index([status, date])
+  @@index([category, date])
 }
 
 // =============================================================================

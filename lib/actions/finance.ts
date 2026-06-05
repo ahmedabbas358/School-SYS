@@ -1,9 +1,101 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { getCurrentUser, createAuditLog, generateInvoiceNumber, generatePaymentNumber } from '@/lib/auth';
 import { createInvoiceSchema, recordPaymentSchema, type ActionResponse } from '@/lib/validations';
+
+const FINANCE_CACHE_TAG = 'finance-core';
+const FINANCE_DASHBOARD_REVALIDATE_SECONDS = 60;
+const MAX_FINANCE_PAGE_SIZE = 100;
+
+function revalidateFinanceData() {
+  revalidateTag(FINANCE_CACHE_TAG);
+  revalidatePath('/finance');
+}
+
+const getCachedFinanceDashboard = unstable_cache(
+  async () => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    const [
+      totalInvoices,
+      totalCollected,
+      totalOutstanding,
+      overdueCount,
+      monthlyPayments,
+      yearlyPayments,
+      recentPayments,
+      statusCounts,
+      monthlyExpenses,
+    ] = await Promise.all([
+      prisma.invoice.aggregate({ _sum: { totalAmount: true } }),
+      prisma.invoice.aggregate({ _sum: { paidAmount: true } }),
+      prisma.invoice.aggregate({
+        _sum: { balance: true },
+        where: { status: { in: ['UNPAID', 'PARTIAL', 'OVERDUE'] } },
+      }),
+      prisma.invoice.count({ where: { status: 'OVERDUE' } }),
+      prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: { paidAt: { gte: startOfMonth }, status: 'COMPLETED' },
+      }),
+      prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: { paidAt: { gte: startOfYear }, status: 'COMPLETED' },
+      }),
+      prisma.payment.findMany({
+        take: 10,
+        orderBy: { paidAt: 'desc' },
+        select: {
+          id: true,
+          paymentNumber: true,
+          amount: true,
+          method: true,
+          status: true,
+          paidAt: true,
+          invoice: {
+            select: {
+              id: true,
+              invoiceNumber: true,
+              student: {
+                select: {
+                  id: true,
+                  studentNumber: true,
+                  user: { select: { name: true } },
+                },
+              },
+            },
+          },
+        },
+      }),
+      prisma.invoice.groupBy({
+        by: ['status'],
+        _count: { status: true },
+      }),
+      prisma.expense.aggregate({
+        _sum: { amount: true },
+        where: { date: { gte: startOfMonth }, status: { in: ['APPROVED', 'PAID'] } },
+      }),
+    ]);
+
+    return {
+      totalInvoiced: totalInvoices._sum.totalAmount || 0,
+      totalCollected: totalCollected._sum.paidAmount || 0,
+      totalOutstanding: totalOutstanding._sum.balance || 0,
+      overdueCount,
+      monthlyRevenue: monthlyPayments._sum.amount || 0,
+      yearlyRevenue: yearlyPayments._sum.amount || 0,
+      monthlyExpenses: monthlyExpenses._sum.amount || 0,
+      recentPayments,
+      statusCounts,
+    };
+  },
+  ['finance-dashboard-v1'],
+  { tags: [FINANCE_CACHE_TAG], revalidate: FINANCE_DASHBOARD_REVALIDATE_SECONDS }
+);
 
 // =============================================================================
 // CREATE INVOICE
@@ -51,7 +143,7 @@ export async function createInvoice(formData: unknown): Promise<ActionResponse> 
       newData: { invoiceNumber, totalAmount, studentId: data.studentId },
     });
 
-    revalidatePath('/finance');
+    revalidateFinanceData();
     return { success: true, data: invoice };
   } catch (error: any) {
     return { success: false, error: error.message || 'حدث خطأ في إنشاء الفاتورة' };
@@ -125,7 +217,7 @@ export async function recordPayment(formData: unknown): Promise<ActionResponse> 
       newData: { paymentNumber, amount: data.amount, invoiceId: data.invoiceId },
     });
 
-    revalidatePath('/finance');
+    revalidateFinanceData();
     return { success: true, data: payment };
   } catch (error: any) {
     return { success: false, error: error.message || 'حدث خطأ في تسجيل الدفعة' };
@@ -145,7 +237,7 @@ export async function getInvoices(params?: {
 }): Promise<ActionResponse> {
   try {
     const page = params?.page || 1;
-    const limit = params?.limit || 20;
+    const limit = Math.min(params?.limit || 20, MAX_FINANCE_PAGE_SIZE);
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -162,12 +254,45 @@ export async function getInvoices(params?: {
     const [invoices, total] = await Promise.all([
       prisma.invoice.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          invoiceNumber: true,
+          totalAmount: true,
+          paidAmount: true,
+          balance: true,
+          dueDate: true,
+          status: true,
+          notes: true,
+          createdAt: true,
+          updatedAt: true,
           student: {
-            include: { user: { select: { name: true } } },
+            select: {
+              id: true,
+              studentNumber: true,
+              status: true,
+              user: { select: { name: true } },
+            },
           },
-          items: true,
-          payments: { orderBy: { paidAt: 'desc' } },
+          items: {
+            select: {
+              id: true,
+              description: true,
+              amount: true,
+              feeStructureId: true,
+            },
+          },
+          payments: {
+            select: {
+              id: true,
+              paymentNumber: true,
+              amount: true,
+              method: true,
+              status: true,
+              paidAt: true,
+            },
+            orderBy: { paidAt: 'desc' },
+            take: 5,
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -192,60 +317,11 @@ export async function getInvoices(params?: {
 
 export async function getFinanceDashboard(): Promise<ActionResponse> {
   try {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfYear = new Date(now.getFullYear(), 0, 1);
-
-    const [
-      totalInvoices,
-      totalCollected,
-      totalOutstanding,
-      overdueCount,
-      monthlyPayments,
-      yearlyPayments,
-      recentPayments,
-      statusCounts,
-    ] = await Promise.all([
-      prisma.invoice.aggregate({ _sum: { totalAmount: true } }),
-      prisma.invoice.aggregate({ _sum: { paidAmount: true } }),
-      prisma.invoice.aggregate({ _sum: { balance: true }, where: { status: { in: ['UNPAID', 'PARTIAL', 'OVERDUE'] } } }),
-      prisma.invoice.count({ where: { status: 'OVERDUE' } }),
-      prisma.payment.aggregate({ _sum: { amount: true }, where: { paidAt: { gte: startOfMonth }, status: 'COMPLETED' } }),
-      prisma.payment.aggregate({ _sum: { amount: true }, where: { paidAt: { gte: startOfYear }, status: 'COMPLETED' } }),
-      prisma.payment.findMany({
-        take: 10,
-        orderBy: { paidAt: 'desc' },
-        include: {
-          invoice: {
-            include: { student: { include: { user: { select: { name: true } } } } },
-          },
-        },
-      }),
-      prisma.invoice.groupBy({
-        by: ['status'],
-        _count: true,
-      }),
-    ]);
-
-    // Monthly expenses
-    const monthlyExpenses = await prisma.expense.aggregate({
-      _sum: { amount: true },
-      where: { date: { gte: startOfMonth }, status: { in: ['APPROVED', 'PAID'] } },
-    });
+    const dashboard = await getCachedFinanceDashboard();
 
     return {
       success: true,
-      data: {
-        totalInvoiced: totalInvoices._sum.totalAmount || 0,
-        totalCollected: totalCollected._sum.paidAmount || 0,
-        totalOutstanding: totalOutstanding._sum.balance || 0,
-        overdueCount,
-        monthlyRevenue: monthlyPayments._sum.amount || 0,
-        yearlyRevenue: yearlyPayments._sum.amount || 0,
-        monthlyExpenses: monthlyExpenses._sum.amount || 0,
-        recentPayments,
-        statusCounts,
-      },
+      data: dashboard,
     };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -279,7 +355,7 @@ export async function createExpense(data: {
       },
     });
 
-    revalidatePath('/finance');
+    revalidateFinanceData();
     return { success: true, data: expense };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -349,7 +425,7 @@ export async function createFeeStructure(data: {
     if (!user) return { success: false, error: 'غير مصرح' };
 
     const structure = await prisma.feeStructure.create({ data });
-    revalidatePath('/finance');
+    revalidateFinanceData();
     return { success: true, data: structure };
   } catch (error: any) {
     return { success: false, error: error.message };

@@ -104,8 +104,8 @@ export default function AttendancePage() {
                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-5 text-slate-300 border border-slate-200/60 shadow-inner">
                       <UserCheck className="w-10 h-10" />
                    </div>
-                   <h3 className="text-xl font-bold text-slate-800 mb-2 font-display">وحدة قيد الإنشاء</h3>
-                   <p className="text-slate-500 max-w-md text-[13px] font-medium leading-relaxed">سيتم إتاحة وتفعيل هذه الواجهة لاحقاً، الرجاء استخدام لوحة الحضور والانضباط المتاحة الآن.</p>
+                   <h3 className="text-xl font-bold text-slate-800 mb-2 font-display">مسار غير معرف في الحضور والانضباط</h3>
+                   <p className="text-slate-500 max-w-md text-[13px] font-medium leading-relaxed">المفتاح الحالي غير مرتبط بتبويب حضور نشط، استخدم اللوحات اليومية وسجل الانضباط من القائمة الجانبية.</p>
                 </motion.div>
               )}
             </AnimatePresence>

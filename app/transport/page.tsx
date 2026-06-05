@@ -118,8 +118,8 @@ export default function TransportPage() {
                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-5 text-slate-300 border border-slate-200/60 shadow-inner">
                       <Bus className="w-10 h-10" />
                    </div>
-                   <h3 className="text-xl font-bold text-slate-800 mb-2 font-display">وحدة قيد الإنشاء</h3>
-                   <p className="text-slate-500 max-w-md mx-auto text-[13px] font-medium leading-relaxed">سيتم توفير واجهة ({activeTab}) قريباً في التحديث القادم.</p>
+                   <h3 className="text-xl font-bold text-slate-800 mb-2 font-display">مسار غير معرف في النقل المدرسي</h3>
+                   <p className="text-slate-500 max-w-md mx-auto text-[13px] font-medium leading-relaxed">المفتاح ({activeTab}) غير مرتبط بتبويب نقل نشط، استخدم وحدات الحافلات والمسارات من القائمة الجانبية.</p>
                 </motion.div>
               )}
             </AnimatePresence>
