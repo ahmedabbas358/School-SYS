@@ -265,7 +265,7 @@ function PaymentsModule({ dashboardData }: { dashboardData: any }) {
               </tr>
            </thead>
            <tbody className="divide-y divide-slate-100">
-             {payments.map((p, i) => (
+             {payments.map((p: any, i: number) => (
                <tr key={i} className="hover:bg-slate-50/80 transition-colors">
                   <td className="px-6 py-4 font-mono text-[13px] font-bold text-slate-500">{p.id}</td>
                   <td className="px-6 py-4 font-bold text-[14px] text-slate-900">{p.student}</td>
