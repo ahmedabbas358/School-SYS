@@ -738,7 +738,7 @@ function ResultsAnalyticsModule({ stats }: { stats: any }) {
   );
 }
 
-function GradingSetupModule() {
+function GradingSetupModule({ scales }: { scales?: any }) {
   const [ca1, setCa1] = useState(20);
   const [ca2, setCa2] = useState(20);
   const [finalExam, setFinalExam] = useState(60);
