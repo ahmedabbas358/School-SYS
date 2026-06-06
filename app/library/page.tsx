@@ -311,6 +311,11 @@ function MembersModule() {
 }
 
 function ReservationsModule() {
+  const reservations = [
+    { id: 'RES-001', member: 'سارة خالد (طالبة)', book: 'مقدمة في علم الأحياء', date: '2026-10-10', status: 'متاح للاستلام', expiry: '2026-10-12' },
+    { id: 'RES-002', member: 'أ. فهد العتيبي (معلم)', book: 'طرق التدريس الحديثة', date: '2026-10-11', status: 'قيد الانتظار', expiry: '-' },
+  ];
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
@@ -319,16 +324,43 @@ function ReservationsModule() {
           <p className="text-sm text-slate-500 mt-0.5">متابعة طلبات حجز الكتب غير المتوفرة حالياً</p>
         </div>
       </div>
-      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-         <Bookmark className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-         <h3 className="text-lg font-bold text-slate-700">لا توجد حجوزات نشطة</h3>
-         <p className="text-slate-500 text-sm mt-1">جميع طلبات الحجز تم تلبيتها.</p>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right shrink-0">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">المستفيد</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الكتاب المطلوب</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">تاريخ الطلب</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">تاريخ انتهاء الحجز</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الحالة</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {reservations.map((res, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4 text-sm font-bold text-slate-900">{res.member}</td>
+                  <td className="px-5 py-4 text-sm font-semibold text-slate-700">{res.book}</td>
+                  <td className="px-5 py-4 text-center text-sm font-mono text-slate-600">{res.date}</td>
+                  <td className="px-5 py-4 text-center text-sm font-mono text-slate-600">{res.expiry}</td>
+                  <td className="px-5 py-4 text-center">
+                     {res.status === 'متاح للاستلام' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">{res.status}</span>}
+                     {res.status === 'قيد الانتظار' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">{res.status}</span>}
+                  </td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
       </div>
     </motion.div>
   );
 }
 
 function FinesModule() {
+  const fines = [
+    { id: 'F-1001', member: 'زياد طارق', type: 'تأخير إرجاع', amount: '15 ر.س', date: '2026-10-05', status: 'غير مدفوع' },
+    { id: 'F-1002', member: 'عمر حسن', type: 'تلف كتاب', amount: '45 ر.س', date: '2026-09-28', status: 'مدفوع' },
+  ];
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
@@ -337,16 +369,45 @@ function FinesModule() {
           <p className="text-sm text-slate-500 mt-0.5">تحصيل الغرامات عن التأخير أو التلف</p>
         </div>
       </div>
-      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-         <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-         <h3 className="text-lg font-bold text-slate-700">سجل الغرامات</h3>
-         <p className="text-slate-500 text-sm mt-1">هنا يظهر سجل الغرامات المدفوعة والمستحقة.</p>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right shrink-0">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">رقم الغرامة</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">المستفيد</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">السبب</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">المبلغ</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">التاريخ</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الحالة</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {fines.map((fine, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4 font-mono text-sm font-bold text-slate-500">{fine.id}</td>
+                  <td className="px-5 py-4 text-sm font-bold text-slate-900">{fine.member}</td>
+                  <td className="px-5 py-4 text-sm font-semibold text-slate-700">{fine.type}</td>
+                  <td className="px-5 py-4 text-center font-bold font-mono text-rose-600">{fine.amount}</td>
+                  <td className="px-5 py-4 text-center font-mono text-sm text-slate-600">{fine.date}</td>
+                  <td className="px-5 py-4 text-center">
+                     {fine.status === 'مدفوع' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">مدفوع</span>}
+                     {fine.status === 'غير مدفوع' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">غير مدفوع</span>}
+                  </td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
       </div>
     </motion.div>
   );
 }
 
 function InventoryModule() {
+  const sessions = [
+    { id: 'INV-26-01', title: 'جرد نهاية الفصل الدراسي الأول', progress: 100, date: '2026-01-15', status: 'مكتمل', missing: 3 },
+    { id: 'INV-26-02', title: 'الجرد السنوي الشامل', progress: 45, date: '2026-10-10', status: 'جاري العمل', missing: '-' },
+  ];
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
@@ -358,16 +419,39 @@ function InventoryModule() {
            <BookCopy className="w-4 h-4" /> جلسة جرد جديدة
         </button>
       </div>
-      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-         <BookCopy className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-         <h3 className="text-lg font-bold text-slate-700">نظام الجرد الآلي</h3>
-         <p className="text-slate-500 text-sm mt-1">يمكنك بدء جرد باستخدام جهاز قارئ الباركود.</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+         {sessions.map((sess, i) => (
+            <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+               <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-slate-900">{sess.title}</h3>
+                  <span className={cn("px-2 py-1 rounded text-[10px] font-bold", sess.status === 'مكتمل' ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700")}>{sess.status}</span>
+               </div>
+               <p className="text-xs text-slate-500 font-mono mb-4">{sess.id} • {sess.date}</p>
+               <div className="mb-2 flex justify-between text-xs font-bold">
+                  <span className="text-slate-700">نسبة الإنجاز</span>
+                  <span className="text-indigo-600">{sess.progress}%</span>
+               </div>
+               <div className="w-full bg-slate-100 rounded-full h-2 mb-4">
+                  <div className={cn("h-2 rounded-full", sess.status === 'مكتمل' ? "bg-emerald-500" : "bg-indigo-500")} style={{ width: `${sess.progress}%` }}></div>
+               </div>
+               <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                  <span className="text-xs font-semibold text-slate-500">النسخ المفقودة: <strong className="text-rose-600">{sess.missing}</strong></span>
+                  <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800">عرض التقرير</button>
+               </div>
+            </div>
+         ))}
       </div>
     </motion.div>
   );
 }
 
 function TextbooksModule() {
+  const books = [
+    { title: 'الرياضيات - الجزء الأول', grade: 'الصف الأول المتوسط', term: 'الفصل الأول', required: 150, distributed: 145, remaining: 5 },
+    { title: 'لغتي الخالدة', grade: 'الصف الأول المتوسط', term: 'الفصل الأول', required: 150, distributed: 150, remaining: 0 },
+    { title: 'العلوم العامة', grade: 'الصف الثاني المتوسط', term: 'الفصل الأول', required: 120, distributed: 110, remaining: 10 },
+  ];
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
@@ -376,10 +460,35 @@ function TextbooksModule() {
           <p className="text-sm text-slate-500 mt-0.5">صرف واسترجاع الكتب المدرسية والمقررات</p>
         </div>
       </div>
-      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-         <Scan className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-         <h3 className="text-lg font-bold text-slate-700">توزيع المقررات</h3>
-         <p className="text-slate-500 text-sm mt-1">إدارة صرف المقررات للطلاب بداية الفصل الدراسي.</p>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right shrink-0">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الكتاب المدرسي</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الصف الدراسي</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الكمية المطلوبة</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">ما تم توزيعه</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">المتبقي للتوزيع</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left">نسبة التوزيع</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {books.map((b, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4 font-bold text-slate-900 text-sm">{b.title}</td>
+                  <td className="px-5 py-4 text-sm font-semibold text-slate-700">{b.grade}</td>
+                  <td className="px-5 py-4 text-center font-bold text-slate-600">{b.required}</td>
+                  <td className="px-5 py-4 text-center font-bold text-emerald-600">{b.distributed}</td>
+                  <td className="px-5 py-4 text-center font-bold text-rose-500">{b.remaining}</td>
+                  <td className="px-5 py-4 text-left">
+                     <span className="inline-block bg-slate-100 text-slate-700 px-2 py-1 rounded-md text-xs font-bold font-mono">
+                        {Math.round((b.distributed / b.required) * 100)}%
+                     </span>
+                  </td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
       </div>
     </motion.div>
   );
@@ -393,11 +502,39 @@ function OpacModule() {
           <h2 className="text-lg font-bold text-slate-900">البوابة الإلكترونية (OPAC)</h2>
           <p className="text-sm text-slate-500 mt-0.5">إعدادات واجهة البحث لطلاب المدرسة والمستفيدين</p>
         </div>
+        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 shadow-sm transition-colors">حفظ التغييرات</button>
       </div>
-      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-         <Smartphone className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-         <h3 className="text-lg font-bold text-slate-700">إعدادات البوابة</h3>
-         <p className="text-slate-500 text-sm mt-1">تخصيص الواجهة العامة للمكتبة (الكتب المميزة، الإعلانات).</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">إعدادات العرض الأساسية</h3>
+            <div className="space-y-4">
+               <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-700">تفعيل البوابة للطلاب</span>
+                  <input type="checkbox" className="toggle" defaultChecked />
+               </div>
+               <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-700">السماح بالحجز الإلكتروني</span>
+                  <input type="checkbox" className="toggle" defaultChecked />
+               </div>
+               <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-700">إظهار الكتب المضافة حديثاً بالرئيسية</span>
+                  <input type="checkbox" className="toggle" defaultChecked />
+               </div>
+            </div>
+         </div>
+         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">رسائل وإعلانات البوابة</h3>
+            <div className="space-y-4">
+               <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1">رسالة الترحيب</label>
+                  <input type="text" className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" defaultValue="مرحباً بكم في بوابة التعلم ومصادر المعرفة" />
+               </div>
+               <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1">إعلان البوابة الرئيسي</label>
+                  <textarea className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" rows={3} defaultValue="أسبوع القراءة العربي: تعرف على أحدث الإصدارات المتاحة في المكتبة"></textarea>
+               </div>
+            </div>
+         </div>
       </div>
     </motion.div>
   );
