@@ -232,8 +232,8 @@ function ProgressionModule({ students: apiStudents }: { students: any[] }) {
 }
 
 function ResultEntryModule({ students: apiStudents }: { students: any[] }) {
-  const students = apiStudents.length > 0 ? apiStudents.map(s => {
-    const total = Math.floor(Math.random() * 40) + 60; // 60-100 random score
+  const students = apiStudents.length > 0 ? apiStudents.map((s, i) => {
+    const total = ((i * 13) % 40) + 60; // 60-100 pseudo random score
     return {
       id: s.studentNumber,
       name: s.user?.name || 'مجهول',

@@ -271,3 +271,11 @@ function PurchaseRequestsModule() {
     </motion.div>
   );
 }
+
+function PurchaseOrdersModule() { return <div className="p-8 text-center text-slate-500">وحدة أوامر الشراء قيد الإنشاء</div>; }
+function SuppliersModule() { return <div className="p-8 text-center text-slate-500">وحدة الموردين قيد الإنشاء</div>; }
+function ReceivingModule() { return <div className="p-8 text-center text-slate-500">وحدة استلام المشتريات قيد الإنشاء</div>; }
+function DistributionModule() { return <div className="p-8 text-center text-slate-500">وحدة توزيع العهد قيد الإنشاء</div>; }
+function StockTakeModule() { return <div className="p-8 text-center text-slate-500">وحدة الجرد قيد الإنشاء</div>; }
+function MovementsModule() { return <div className="p-8 text-center text-slate-500">وحدة حركات المستودع قيد الإنشاء</div>; }
+function ReportsModule() { return <div className="p-8 text-center text-slate-500">وحدة التقارير قيد الإنشاء</div>; }

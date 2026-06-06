@@ -401,7 +401,7 @@ function AttendanceModule({ employeesData }: { employeesData: any[] }) {
            </thead>
            <tbody className="divide-y divide-slate-100">
              {employeesData.length > 0 ? employeesData.slice(0, 5).map((emp, i) => {
-               const rand = Math.random();
+               const rand = ((i * 7) % 10) / 10;
                const isAbsent = rand > 0.9;
                const isLate = rand > 0.7 && rand <= 0.9;
                return (
