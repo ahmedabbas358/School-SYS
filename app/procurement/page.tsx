@@ -272,10 +272,329 @@ function PurchaseRequestsModule() {
   );
 }
 
-function PurchaseOrdersModule() { return <div className="p-8 text-center text-slate-500">وحدة أوامر الشراء قيد الإنشاء</div>; }
-function SuppliersModule() { return <div className="p-8 text-center text-slate-500">وحدة الموردين قيد الإنشاء</div>; }
-function ReceivingModule() { return <div className="p-8 text-center text-slate-500">وحدة استلام المشتريات قيد الإنشاء</div>; }
-function DistributionModule() { return <div className="p-8 text-center text-slate-500">وحدة توزيع العهد قيد الإنشاء</div>; }
-function StockTakeModule() { return <div className="p-8 text-center text-slate-500">وحدة الجرد قيد الإنشاء</div>; }
-function MovementsModule() { return <div className="p-8 text-center text-slate-500">وحدة حركات المستودع قيد الإنشاء</div>; }
-function ReportsModule() { return <div className="p-8 text-center text-slate-500">وحدة التقارير قيد الإنشاء</div>; }
+function PurchaseOrdersModule() {
+  const orders = [
+    { id: 'PO-2026-089', supplier: 'مكتبة جرير', date: '2026-10-10', total: '14,500 ر.س', status: 'مكتمل', expected: '2026-10-15' },
+    { id: 'PO-2026-090', supplier: 'شركة العصر للتقنية', date: '2026-10-12', total: '45,000 ر.س', status: 'قيد التوريد', expected: '2026-10-20' },
+    { id: 'PO-2026-091', supplier: 'مؤسسة الرواد للأثاث', date: '2026-10-15', total: '28,000 ر.س', status: 'بانتظار الموافقة', expected: '2026-11-01' },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">أوامر الشراء (Purchase Orders)</h2>
+          <p className="text-sm text-slate-500 mt-0.5">إصدار ومتابعة أوامر الشراء للموردين</p>
+        </div>
+        <button className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold shadow-sm shadow-sky-600/20 hover:bg-sky-700 transition-colors flex items-center gap-2">
+          <Plus className="w-4 h-4" /> إنشاء أمر شراء
+        </button>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+           <table className="w-full text-right shrink-0">
+             <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">رقم الأمر</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">المورد</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">التاريخ</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الإجمالي</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">تاريخ التوريد المتوقع</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الحالة</th>
+                   <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left">إجراءات</th>
+                </tr>
+             </thead>
+             <tbody className="divide-y divide-slate-100">
+               {orders.map((order, i) => (
+                 <tr key={i} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-5 py-4"><span className="text-sm font-bold text-slate-900 font-mono">{order.id}</span></td>
+                    <td className="px-5 py-4 text-slate-800 text-sm font-bold">{order.supplier}</td>
+                    <td className="px-5 py-4 text-center text-slate-600 font-mono text-sm">{order.date}</td>
+                    <td className="px-5 py-4 text-center text-emerald-600 font-bold font-mono">{order.total}</td>
+                    <td className="px-5 py-4 text-center text-slate-500 font-mono text-sm">{order.expected}</td>
+                    <td className="px-5 py-4 text-center">
+                       {order.status === 'مكتمل' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">{order.status}</span>}
+                       {order.status === 'قيد التوريد' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">{order.status}</span>}
+                       {order.status === 'بانتظار الموافقة' && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">{order.status}</span>}
+                    </td>
+                    <td className="px-5 py-4 text-left">
+                       <button className="text-[11px] font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg border border-sky-100 transition-colors">عرض</button>
+                    </td>
+                 </tr>
+               ))}
+             </tbody>
+           </table>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function SuppliersModule() {
+  const suppliers = [
+    { id: 'V-101', name: 'مكتبة جرير', category: 'قرطاسية ومكتبية', rating: 4.8, active: true, contact: '0501234567' },
+    { id: 'V-102', name: 'شركة العصر للتقنية', category: 'أجهزة تقنية', rating: 4.5, active: true, contact: '0559876543' },
+    { id: 'V-103', name: 'مؤسسة الرواد للأثاث', category: 'أثاث مدرسي', rating: 3.9, active: false, contact: '0561122334' },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">إدارة الموردين</h2>
+          <p className="text-sm text-slate-500 mt-0.5">قاعدة بيانات الموردين المعتمدين وتقييمهم</p>
+        </div>
+        <button className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold shadow-sm shadow-sky-600/20 hover:bg-sky-700 transition-colors flex items-center gap-2">
+          <Plus className="w-4 h-4" /> إضافة مورد
+        </button>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        {suppliers.map((sup, i) => (
+          <div key={i} className="border border-slate-100 rounded-xl p-4 hover:border-sky-200 hover:shadow-md transition-all group bg-slate-50/30">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm group-hover:text-sky-700 transition-colors">{sup.name}</h3>
+                <span className="text-xs text-slate-500 font-mono mt-1 block">{sup.id}</span>
+              </div>
+              <span className={cn("px-2 py-1 rounded text-[10px] font-bold border", sup.active ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-100 text-slate-500 border-slate-200")}>
+                {sup.active ? 'نشط' : 'غير نشط'}
+              </span>
+            </div>
+            <div className="space-y-2 mt-4 text-sm">
+              <div className="flex justify-between border-b border-slate-100 pb-2">
+                <span className="text-slate-500 text-xs font-semibold">التصنيف:</span>
+                <span className="font-bold text-slate-700 text-xs">{sup.category}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-100 pb-2">
+                <span className="text-slate-500 text-xs font-semibold">التقييم:</span>
+                <span className="font-bold text-amber-500 text-xs flex items-center gap-1">⭐ {sup.rating}</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="text-slate-500 text-xs font-semibold">للتواصل:</span>
+                <span className="font-bold text-slate-700 text-xs font-mono">{sup.contact}</span>
+              </div>
+            </div>
+            <button className="w-full mt-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">عرض الملف</button>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function ReceivingModule() {
+  const receipts = [
+    { id: 'RCV-992', po: 'PO-2026-089', date: '2026-10-15', items: 5, status: 'مكتمل الفحص', inspector: 'علي سعد' },
+    { id: 'RCV-993', po: 'PO-2026-090', date: '2026-10-18', items: 2, status: 'قيد الفحص', inspector: 'ياسر محمد' },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <h2 className="text-lg font-bold text-slate-900">الاستلام والفحص المخزني</h2>
+        <p className="text-sm text-slate-500 mt-0.5">استلام المواد من الموردين وفحص الجودة والمطابقة</p>
+      </div>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">رقم الاستلام</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">أمر الشراء المرتبط</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">التاريخ</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الأصناف</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">لجنة الفحص</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الحالة</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left">إجراءات</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {receipts.map((r, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4 font-bold text-slate-900 font-mono text-sm">{r.id}</td>
+                  <td className="px-5 py-4 text-sky-600 font-bold font-mono text-sm cursor-pointer hover:underline">{r.po}</td>
+                  <td className="px-5 py-4 text-center text-slate-600 font-mono text-sm">{r.date}</td>
+                  <td className="px-5 py-4 text-center font-bold text-slate-700">{r.items}</td>
+                  <td className="px-5 py-4 text-center text-sm font-semibold text-slate-700">{r.inspector}</td>
+                  <td className="px-5 py-4 text-center">
+                    <span className={cn("px-2 py-0.5 rounded text-[10px] font-bold border", r.status === 'مكتمل الفحص' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200")}>{r.status}</span>
+                  </td>
+                  <td className="px-5 py-4 text-left">
+                     <button className="text-[11px] font-bold text-slate-600 hover:text-sky-700 bg-white border border-slate-200 hover:border-sky-200 px-3 py-1.5 rounded-lg shadow-sm transition-colors">تقرير الاستلام</button>
+                  </td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
+      </div>
+    </motion.div>
+  );
+}
+
+function DistributionModule() {
+  const issues = [
+    { id: 'ISS-4001', dept: 'الإدارة الأكاديمية', requestor: 'سناء خليل', items: 'ورق تصوير A4 (5 كرتون)', date: '2026-10-18', status: 'تم الصرف' },
+    { id: 'ISS-4002', dept: 'قسم التقنية', requestor: 'فهد عبدالله', items: 'أحبار طابعات (10 حبة)', date: '2026-10-19', status: 'بانتظار التسليم' },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">صرف المواد والعهد</h2>
+          <p className="text-sm text-slate-500 mt-0.5">صرف الأدوات والمستهلكات للأقسام المختلفة</p>
+        </div>
+        <button className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-sky-700 transition-colors flex items-center gap-2">
+          <ArrowRightLeft className="w-4 h-4" /> سند صرف جديد
+        </button>
+      </div>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">رقم السند</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الجهة الطالبة</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الأصناف</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">التاريخ</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الحالة</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {issues.map((iss, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4 font-bold text-slate-900 font-mono text-sm">{iss.id}</td>
+                  <td className="px-5 py-4">
+                     <span className="block text-sm font-bold text-slate-800">{iss.dept}</span>
+                     <span className="block text-xs font-semibold text-slate-500">{iss.requestor}</span>
+                  </td>
+                  <td className="px-5 py-4 text-sm font-semibold text-slate-600">{iss.items}</td>
+                  <td className="px-5 py-4 text-center text-slate-600 font-mono text-sm">{iss.date}</td>
+                  <td className="px-5 py-4 text-center">
+                    <span className={cn("px-2 py-0.5 rounded text-[10px] font-bold border", iss.status === 'تم الصرف' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200")}>{iss.status}</span>
+                  </td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
+      </div>
+    </motion.div>
+  );
+}
+
+function StockTakeModule() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+           <h2 className="text-lg font-bold text-slate-900">الجرد الدوري والتسويات</h2>
+           <p className="text-sm text-slate-500 mt-1">مطابقة الأرصدة الدفترية مع الأرصدة الفعلية في المستودع</p>
+        </div>
+        <button className="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-slate-800 transition-colors">
+          بدء جلسة جرد جديدة
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[
+          { title: "جرد نهاية الفصل الدراسي الأول", date: "2026-01-15", status: "مغلق", variance: "+2 الأصناف" },
+          { title: "جرد مفاجئ (قرطاسية)", date: "2026-03-10", status: "مغلق", variance: "متطابق" },
+          { title: "جرد الربع الثالث", date: "2026-10-01", status: "قيد المراجعة", variance: "-1 صنف" },
+        ].map((tk, i) => (
+          <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-4">
+              <ShieldCheck className="w-6 h-6 text-sky-500" />
+              <span className={cn("px-2 py-1 rounded text-[10px] font-bold", tk.status === 'مغلق' ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-700')}>{tk.status}</span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{tk.title}</h3>
+            <p className="text-xs text-slate-500 font-mono mb-4">{tk.date}</p>
+            <div className="bg-slate-50 rounded-lg p-3 flex justify-between items-center border border-slate-100">
+               <span className="text-xs font-semibold text-slate-600">الفروقات (Variance):</span>
+               <span className={cn("text-xs font-bold", tk.variance === 'متطابق' ? 'text-emerald-600' : 'text-rose-600')}>{tk.variance}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function MovementsModule() {
+  const history = [
+    { type: 'IN', item: 'ورق تصوير A4', qty: '+500', ref: 'RCV-992', date: '2026-10-15 09:30 AM', user: 'علي سعد' },
+    { type: 'OUT', item: 'ورق تصوير A4', qty: '-5', ref: 'ISS-4001', date: '2026-10-18 11:15 AM', user: 'محمد فهد' },
+    { type: 'ADJ', item: 'أقلام سبورة', qty: '-2', ref: 'STK-210', date: '2026-10-01 04:00 PM', user: 'سالم عبدالله' },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3">
+         <History className="w-6 h-6 text-slate-400" />
+         <div>
+            <h2 className="text-lg font-bold text-slate-900">سجل حركة الأصناف (Item Ledger)</h2>
+            <p className="text-sm text-slate-500">تتبع مفصل لكافة حركات الإدخال والإخراج والتسوية</p>
+         </div>
+      </div>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-right">
+           <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">نوع الحركة</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">الصنف</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">الكمية</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">المرجع</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">التاريخ والوقت</th>
+                 <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">بواسطة</th>
+              </tr>
+           </thead>
+           <tbody className="divide-y divide-slate-100">
+             {history.map((h, i) => (
+               <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-5 py-4">
+                     {h.type === 'IN' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100"><ArrowRightLeft className="w-3 h-3" /> وارد</span>}
+                     {h.type === 'OUT' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-100"><ArrowRightLeft className="w-3 h-3" /> منصرف</span>}
+                     {h.type === 'ADJ' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-100"><ShieldCheck className="w-3 h-3" /> تسوية</span>}
+                  </td>
+                  <td className="px-5 py-4 font-bold text-slate-800 text-sm">{h.item}</td>
+                  <td className="px-5 py-4 text-center">
+                     <span className={cn("font-bold font-mono text-sm", h.type === 'IN' ? 'text-emerald-600' : h.type === 'OUT' ? 'text-rose-600' : 'text-amber-600')}>{h.qty}</span>
+                  </td>
+                  <td className="px-5 py-4 text-center text-slate-500 font-mono text-xs">{h.ref}</td>
+                  <td className="px-5 py-4 text-center text-slate-600 font-mono text-xs">{h.date}</td>
+                  <td className="px-5 py-4 text-center text-slate-700 text-sm font-semibold">{h.user}</td>
+               </tr>
+             ))}
+           </tbody>
+        </table>
+      </div>
+    </motion.div>
+  );
+}
+
+function ReportsModule() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-5">
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <h2 className="text-lg font-bold text-slate-900 mb-1">التقارير والإحصائيات</h2>
+        <p className="text-sm text-slate-500 font-medium">لوحات بيانات وتقارير تحليلية لحركة المستودعات والمشتريات</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+         {[
+           'تقرير الأرصدة المخزنية', 
+           'تقرير حد الطلب والنواقص', 
+           'تحليل المشتريات الشهرية', 
+           'كشف حساب مورد', 
+           'تقرير المصروفات حسب القسم', 
+           'ملخص الجرد والتسويات'
+         ].map((rep, i) => (
+           <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all group cursor-pointer hover:border-sky-200 flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-sky-100 transition-colors">
+                <BarChart3 className="w-6 h-6 text-sky-500" />
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm group-hover:text-sky-700 transition-colors">{rep}</h4>
+              <p className="text-xs text-slate-500 mt-2">عرض وتصدير PDF / Excel</p>
+           </div>
+         ))}
+      </div>
+    </motion.div>
+  );
+}
