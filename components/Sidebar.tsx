@@ -66,7 +66,7 @@ const navGroups = [
 ];
 
 import { LogoutButton } from "@/components/LogoutButton";
-import { getRoleLabel } from "@/lib/auth";
+import { getRoleLabel } from "@/lib/auth-client";
 
 export function Sidebar({ isMobileOpen, onMobileClose, user }: { isMobileOpen?: boolean, onMobileClose?: () => void, user?: any }) {
   const pathname = usePathname();

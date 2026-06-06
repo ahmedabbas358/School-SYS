@@ -73,7 +73,7 @@ const getCachedFinanceDashboard = unstable_cache(
       }),
       prisma.invoice.groupBy({
         by: ['status'],
-        _count: { status: true },
+        _count: true,
       }),
       prisma.expense.aggregate({
         _sum: { amount: true },

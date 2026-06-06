@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAcademicStructure, getSubjects, getAcademicYears } from '@/lib/actions/academic';
 
+export const revalidate = 300;
+
 export async function GET(request: Request) {
   try {
     const [structureRes, subjectsRes, yearsRes] = await Promise.all([

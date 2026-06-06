@@ -509,7 +509,7 @@ model Employee {
 
   @@index([employeeNumber])
   @@index([departmentId])
-  @@index([gradeId, name])
+  @@index([position])
   @@index([status])
   @@index([deletedAt])
 }
@@ -783,8 +783,6 @@ model Expense {
   updatedAt   DateTime @updatedAt
 
   @@index([category])
-  @@index([academicYearId, gradeId, category])
-  @@index([isRequired, category])
   @@index([status])
   @@index([date])
   @@index([status, date])
