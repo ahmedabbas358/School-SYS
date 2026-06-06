@@ -145,6 +145,7 @@ export default function SettingsPage() {
                 "numbering",
                 "notifications",
                 "privacy",
+                "auth",
                 "backup",
                 "integrations",
               ].includes(activeTab) && (

@@ -107,28 +107,10 @@ export default function AdminPage() {
             {activeTab === "rbac" && <RbacModule key="rbac" />}
             {activeTab === "workflows" && <WorkflowModule key="workflows" />}
             {activeTab === "profile" && (
-              <div
-                key="profile"
-                 className="bg-white border border-slate-200/80 rounded-2xl p-20 text-center shadow-[0_2px_10px_rgba(0,0,0,0.02)] min-h-[400px] flex flex-col items-center justify-center"
-              >
-                  <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-5 text-slate-300 border border-slate-200/60 shadow-inner">
-                     <Building2 className="w-10 h-10" />
-                  </div>
-                <p className="text-xl font-bold text-slate-800 mb-2 font-display">وحدة بيانات المؤسسة قيد التطوير المتقدم...</p>
-                 <p className="text-slate-500 max-w-md mx-auto text-[13px] font-medium leading-relaxed">سيتم توفير إعدادات الهوية المؤسسية هنا.</p>
-              </div>
+              <ProfileModule key="profile" />
             )}
             {activeTab === "academic" && (
-              <div
-                key="academic"
-                 className="bg-white border border-slate-200/80 rounded-2xl p-20 text-center shadow-[0_2px_10px_rgba(0,0,0,0.02)] min-h-[400px] flex flex-col items-center justify-center"
-              >
-                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-5 text-slate-300 border border-slate-200/60 shadow-inner">
-                   <Globe className="w-10 h-10" />
-                </div>
-                <p className="text-xl font-bold text-slate-800 mb-2 font-display">وحدة الهيكل التربوي قيد التطوير المتقدم...</p>
-                 <p className="text-slate-500 max-w-md mx-auto text-[13px] font-medium leading-relaxed">تم نقل الهيكل الأكاديمي الأساسي إلى وحدة منفصلة للمرونة.</p>
-              </div>
+              <AcademicModule key="academic" />
             )}
             {activeTab === "audit" && <AuditModule key="audit" />}
             {activeTab === "tools" && <ToolsModule key="tools" />}
@@ -613,6 +595,74 @@ function ToolsModule() {
          </div>
        </div>
 
+    </motion.div>
+  );
+}
+
+function ProfileModule() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+       <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+         <h3 className="text-[17px] font-bold text-slate-900 font-display mb-4">بيانات المؤسسة والهوية البصرية</h3>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">اسم المؤسسة التعلمية</label>
+                 <input type="text" className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" defaultValue="مدارس المستقبل الأهلية" />
+               </div>
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">الرقم الضريبي / السجل التجاري</label>
+                 <input type="text" className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" defaultValue="310293029100003" />
+               </div>
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">البريد الإلكتروني الرسمي</label>
+                 <input type="email" className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" defaultValue="info@future-schools.edu" />
+               </div>
+            </div>
+            <div className="space-y-4">
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">الشعار (Logo)</label>
+                 <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors cursor-pointer">
+                    <Building2 className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                    <span className="text-sm font-semibold text-slate-600">انقر لرفع شعار جديد</span>
+                 </div>
+               </div>
+            </div>
+         </div>
+       </div>
+    </motion.div>
+  );
+}
+
+function AcademicModule() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+       <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+         <h3 className="text-[17px] font-bold text-slate-900 font-display mb-4">الهيكل التربوي والتقويم المدمج</h3>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">نظام الفصول الدراسية</label>
+                 <select className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    <option>نظام 3 فصول دراسية (مسارات)</option>
+                    <option>نظام فصلين دراسيين</option>
+                 </select>
+               </div>
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">بداية العام الدراسي الحالي</label>
+                 <input type="date" className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" defaultValue="2026-08-20" />
+               </div>
+            </div>
+            <div className="space-y-4">
+               <div>
+                 <label className="block text-xs font-bold text-slate-500 mb-1">حالة التقويم</label>
+                 <div className="bg-emerald-50 text-emerald-700 p-3 rounded-lg border border-emerald-200 text-sm font-bold flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5" /> التقويم الأكاديمي معتمد ومقفل
+                 </div>
+               </div>
+            </div>
+         </div>
+       </div>
     </motion.div>
   );
 }
