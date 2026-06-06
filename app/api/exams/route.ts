@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         periods: periodsRes.success ? periodsRes.data : [],
         stats: statsRes.success ? statsRes.data : {},
         scales: scalesRes.success ? scalesRes.data : [],
-        students: studentsRes.success ? (studentsRes.data as any).students : []
+        students: studentsRes.success ? studentsRes.data : []
       }
     });
   } catch (error: any) {

@@ -150,8 +150,8 @@ function NavItem({ icon, label, id, active, onClick }: any) {
 // Sub-Modules
 // ----------------------------------------------------
 
-function ProgressionModule({ students: apiStudents }: { students: any[] }) {
-  const students = apiStudents.length > 0 ? apiStudents.map(s => ({
+function ProgressionModule({ students: apiStudents = [] }: { students?: any[] }) {
+  const students = apiStudents && apiStudents.length > 0 ? apiStudents.map(s => ({
     id: s.studentNumber,
     name: s.user?.name || 'مجهول',
     curentClass: 'عام',
@@ -231,8 +231,8 @@ function ProgressionModule({ students: apiStudents }: { students: any[] }) {
   );
 }
 
-function ResultEntryModule({ students: apiStudents }: { students: any[] }) {
-  const students = apiStudents.length > 0 ? apiStudents.map((s, i) => {
+function ResultEntryModule({ students: apiStudents = [] }: { students?: any[] }) {
+  const students = apiStudents && apiStudents.length > 0 ? apiStudents.map((s, i) => {
     const total = ((i * 13) % 40) + 60; // 60-100 pseudo random score
     return {
       id: s.studentNumber,
@@ -318,8 +318,8 @@ function ResultEntryModule({ students: apiStudents }: { students: any[] }) {
   );
 }
 
-function ResultReviewModule({ periods }: { periods: any[] }) {
-  const reviews = periods.length > 0 ? periods.map(p => ({
+function ResultReviewModule({ periods = [] }: { periods?: any[] }) {
+  const reviews = periods && periods.length > 0 ? periods.map(p => ({
     title: p.name,
     submittedBy: p.approvedBy || "النظام الآلي",
     date: p.createdAt ? p.createdAt.split('T')[0] : "",
@@ -690,8 +690,16 @@ const analyticsData = [
   { name: 'الثالث الثانوي', a: 210, b: 180, c: 30, fail: 5 },
 ];
 
-function ResultsAnalyticsModule({ stats }: { stats: any }) {
+function ResultsAnalyticsModule({ stats }: { stats?: any }) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return <div className="h-full flex items-center justify-center p-12 text-slate-400">جاري تحميل التحليلات...</div>;
+  }
+
   const totalEntries = stats?.totalEntries || 0;
+  const successRate = stats?.successRate || 92;
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
