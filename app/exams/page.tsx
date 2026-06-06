@@ -692,7 +692,10 @@ const analyticsData = [
 
 function ResultsAnalyticsModule({ stats }: { stats?: any }) {
   const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => { setMounted(true); }, []);
+  React.useEffect(() => { 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true); 
+  }, []);
 
   if (!mounted) {
     return <div className="h-full flex items-center justify-center p-12 text-slate-400">جاري تحميل التحليلات...</div>;
