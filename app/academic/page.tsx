@@ -192,7 +192,7 @@ function StructureModule({ structure }: { structure: any[] }) {
              </div>
              
              <div className="flex flex-wrap gap-2.5">
-                {stage.grades.map((grade, j) => (
+                {stage.grades.map((grade: string, j: number) => (
                    <span key={j} className={cn("px-3.5 py-1.5 rounded-lg text-[12px] font-bold border shadow-sm", stage.color)}>
                      {grade}
                    </span>
